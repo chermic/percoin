@@ -1,12 +1,8 @@
-import { useQuery } from 'react-query';
-import { getActivities } from '../../../requests';
+import { useGetActivities } from '../../../requests';
 import { Action } from './Action';
 
 export const ActionsList = () => {
-  const { data, isLoading, error } = useQuery({
-    queryFn: getActivities,
-    refetchOnWindowFocus: false,
-  });
+  const { data, isLoading, error } = useGetActivities();
 
   if (error) {
     return <div>Error occured during fetching actions</div>;

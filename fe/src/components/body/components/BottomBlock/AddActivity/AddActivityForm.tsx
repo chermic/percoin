@@ -1,5 +1,5 @@
-import { useQuery } from 'react-query';
-import { createActivity, getActions } from '../../../requests';
+import { useQueryClient } from 'react-query';
+import { createActivity, useGetActions } from '../../../requests';
 import { Action } from '../../types';
 import { Dropdown } from '../../../../Dropdown/Dropdown';
 import { useState } from 'react';
@@ -17,9 +17,9 @@ const getUniqueCategories = (actions: Action[] = []) => {
 };
 
 export const AddActivityForm = (): JSX.Element => {
-  const { data, isLoading, isFetching, error } = useQuery({
-    queryFn: getActions,
-  });
+  const queryClient = useQueryClient();
+
+  const { data, isLoading, error } = useGetActions();
   console.log('🚀 ~ file: AddActivityForm.tsx ~ line 21 ~ data', data);
 
   const { categories } = getUniqueCategories(data?.actions);
@@ -59,7 +59,7 @@ export const AddActivityForm = (): JSX.Element => {
     return <div>Error occured during fetching actions</div>;
   }
 
-  if (isLoading || isFetching) {
+  if (isLoading) {
     return <div>Loading...</div>;
   }
 
@@ -76,6 +76,7 @@ export const AddActivityForm = (): JSX.Element => {
         defaultText="Select action"
         onChange={setSelectedAction}
         selectedItem={selectedAction}
+        disabled={selectedCategory === null}
       />
       <span>{score}</span>
       <Button

@@ -1,8 +1,15 @@
+import { useQuery } from 'react-query';
 import superagent from 'superagent';
 import { endpoints } from '../../endpoints';
 import { Action, Activity } from './components/types';
 
-export const getActivities = async (): Promise<{ activities: Activity[] }> => {
+type UseFetchResult<Data = Record<string, unknown>> = {
+  data: Data | undefined;
+  error: unknown;
+  isLoading: boolean;
+};
+
+const getActivities = async (): Promise<{ activities: Activity[] }> => {
   try {
     const activities = await superagent.get(endpoints.GET_ACTIVITIES ?? '');
     return activities.body;
@@ -11,7 +18,7 @@ export const getActivities = async (): Promise<{ activities: Activity[] }> => {
   }
 };
 
-export const getActions = async (): Promise<{ actions: Action[] }> => {
+const getActions = async (): Promise<{ actions: Action[] }> => {
   try {
     const actions = await superagent.get(endpoints.GET_ACTIONS ?? '');
 
@@ -35,4 +42,37 @@ export const createActivity = async (activity: Activity) => {
     .send(activity);
 
   return response;
+};
+
+type UseGetActivitiesResponse = {
+  activities: Activity[];
+};
+
+export const useGetActivities =
+  (): UseFetchResult<UseGetActivitiesResponse> => {
+    const { data, isFetching, isLoading, error } = useQuery<
+      any,
+      any,
+      UseGetActivitiesResponse
+    >('activities', {
+      queryFn: getActivities,
+      refetchOnWindowFocus: false,
+    });
+    return { data, isLoading: isFetching || isLoading, error };
+  };
+
+type UseGetActionsResponse = {
+  actions: Action[];
+};
+
+export const useGetActions = (): UseFetchResult<UseGetActionsResponse> => {
+  const { data, isFetching, isLoading, error } = useQuery<
+    any,
+    any,
+    UseGetActionsResponse
+  >('actions', {
+    queryFn: getActions,
+    refetchOnWindowFocus: false,
+  });
+  return { data, isLoading: isFetching || isLoading, error };
 };

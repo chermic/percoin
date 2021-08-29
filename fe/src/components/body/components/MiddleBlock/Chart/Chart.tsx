@@ -1,17 +1,13 @@
-import { useQuery } from 'react-query';
-import { getActivities } from '../../../requests';
+import { useGetActivities } from '../../../requests';
 
 export const Chart = () => {
-  const { data, isLoading, isFetching, error } = useQuery({
-    queryFn: getActivities,
-    refetchOnWindowFocus: false,
-  });
+  const { data, isLoading, error } = useGetActivities();
 
   if (error) {
     return <div>Error: {JSON.stringify(error)}</div>;
   }
 
-  if (isLoading || isFetching) {
+  if (isLoading) {
     return <div>Loading...</div>;
   }
 
