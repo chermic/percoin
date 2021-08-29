@@ -13,4 +13,5 @@ export const addAcitvitySchema: JSONSchema6 = {
     },
     action,
   },
+  required: ['date', 'user', 'action'],
 };

@@ -1,7 +1,8 @@
+import { FunctionDefinition } from '@common/lib/FunctionDefinition';
 import { handlerPath } from '@common/lib/handlerPath';
-import { FunctionDefinition } from '@common/types/common';
+import { IFunctionDefinition } from '@common/types/common';
 
-export const getActions: FunctionDefinition = {
+export const getActions: IFunctionDefinition = new FunctionDefinition({
   handler: `${handlerPath(__dirname)}/api.getActions`,
   events: [
     {
@@ -11,4 +12,6 @@ export const getActions: FunctionDefinition = {
       },
     },
   ],
-};
+})
+  .addCors()
+  .getResult();

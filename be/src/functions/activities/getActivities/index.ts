@@ -1,23 +1,27 @@
+import { FunctionDefinition } from '@common/lib/FunctionDefinition';
 import { handlerPath } from '@common/lib/handlerPath';
-import { FunctionDefinition } from '@common/types/common';
+import { IFunctionDefinition } from '@common/types/common';
 
-export const getActivities: FunctionDefinition = {
+export const getActivities: IFunctionDefinition = new FunctionDefinition({
   handler: `${handlerPath(__dirname)}/api.getActivities`,
   events: [
     {
       http: {
+        cors: true,
         method: 'GET',
         path: 'get-activities',
         request: {
           parameters: {
             querystrings: {
-              startDate: {},
-              endDate: {},
-              user: {},
+              startDate: { required: false },
+              endDate: { required: false },
+              user: { required: false },
             },
           },
         },
       },
     },
   ],
-};
+})
+  .addCors()
+  .getResult();

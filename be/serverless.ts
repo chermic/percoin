@@ -51,9 +51,14 @@ const serverlessConfiguration: AWS = {
               'dynamodb:Update*',
               'dynamodb:PutItem',
             ],
-            Resource: {
-              'Fn::GetAtt': ['ActionsTable', 'Arn'],
-            },
+            Resource: [
+              {
+                'Fn::GetAtt': ['ActionsTable', 'Arn'],
+              },
+              {
+                'Fn::GetAtt': ['ActionsLogTable', 'Arn'],
+              },
+            ],
           },
         ],
       },

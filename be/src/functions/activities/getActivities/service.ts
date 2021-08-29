@@ -11,7 +11,13 @@ export const getActivitiesService = async () => {
       TableName
     );
     const scanResult = await dynamoDb.scan({ TableName });
-    const activities = Converter.unmarshall(scanResult.Items[0]);
+    console.log(
+      '🚀 ~ file: service.ts ~ line 14 ~ getActivitiesService ~ scanResult',
+      scanResult.Items
+    );
+    const activities = scanResult.Items.map((item) =>
+      Converter.unmarshall(item)
+    );
     console.log(
       '🚀 ~ file: service.ts ~ line 11 ~ getActivitiesService ~ activities',
       activities

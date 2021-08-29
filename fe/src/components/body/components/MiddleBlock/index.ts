@@ -1,0 +1,1 @@
+export { MiddleBlock } from './MiddleBlock';

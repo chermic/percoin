@@ -1,8 +1,9 @@
+import { FunctionDefinition } from '@common/lib/FunctionDefinition';
 import { handlerPath } from '@common/lib/handlerPath';
-import { FunctionDefinition } from '@common/types/common';
+import { IFunctionDefinition } from '@common/types/common';
 import { addAcitvitySchema } from './schema';
 
-export const addActivity: FunctionDefinition = {
+export const addActivity: IFunctionDefinition = new FunctionDefinition({
   handler: `${handlerPath(__dirname)}/api.addActivity`,
   events: [
     {
@@ -15,4 +16,6 @@ export const addActivity: FunctionDefinition = {
       },
     },
   ],
-};
+})
+  .addCors()
+  .getResult();

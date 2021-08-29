@@ -12,7 +12,9 @@ export const getActionsService = async () => {
 
     const scanResponse = await dynamoDb.scan({ TableName });
 
-    const formattedActions = Converter.unmarshall(scanResponse.Items[0]);
+    const formattedActions = scanResponse.Items.map((item) =>
+      Converter.unmarshall(item)
+    );
     console.log(
       '🚀 ~ file: service.ts ~ line 16 ~ getActionsService ~ formattedActions',
       formattedActions
