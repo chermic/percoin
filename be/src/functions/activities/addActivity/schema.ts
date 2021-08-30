@@ -6,7 +6,7 @@ export const addAcitvitySchema: JSONSchema6 = {
   properties: {
     date: {
       type: 'integer',
-      maximum: 0,
+      minimum: 0,
     },
     user: {
       type: 'string',
