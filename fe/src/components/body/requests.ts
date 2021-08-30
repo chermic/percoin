@@ -7,6 +7,12 @@ type UseFetchResult<Data = Record<string, unknown>> = {
   data: Data | undefined;
   error: unknown;
   isLoading: boolean;
+  refetch?(): void;
+};
+
+export const QUERY_KEY = {
+  actions: 'actions',
+  activities: 'activities',
 };
 
 const getActivities = async (): Promise<{ activities: Activity[] }> => {
@@ -50,15 +56,15 @@ type UseGetActivitiesResponse = {
 
 export const useGetActivities =
   (): UseFetchResult<UseGetActivitiesResponse> => {
-    const { data, isFetching, isLoading, error } = useQuery<
+    const { data, isFetching, isLoading, error, refetch } = useQuery<
       any,
       any,
       UseGetActivitiesResponse
-    >('activities', {
+    >(QUERY_KEY.activities, {
       queryFn: getActivities,
       refetchOnWindowFocus: false,
     });
-    return { data, isLoading: isFetching || isLoading, error };
+    return { data, isLoading: isFetching || isLoading, error, refetch };
   };
 
 type UseGetActionsResponse = {
@@ -70,7 +76,7 @@ export const useGetActions = (): UseFetchResult<UseGetActionsResponse> => {
     any,
     any,
     UseGetActionsResponse
-  >('actions', {
+  >(QUERY_KEY.actions, {
     queryFn: getActions,
     refetchOnWindowFocus: false,
   });

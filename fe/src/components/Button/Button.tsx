@@ -3,6 +3,7 @@ type Props = {
   onClick(): void;
   isDisabled?: boolean;
   isLoading?: boolean;
+  className?: string;
 };
 
 export const Button = ({
@@ -10,9 +11,14 @@ export const Button = ({
   onClick,
   isDisabled,
   isLoading,
+  className,
 }: Props): JSX.Element => {
   return (
-    <button disabled={isDisabled} onClick={() => onClick()}>
+    <button
+      disabled={isDisabled}
+      onClick={() => onClick()}
+      className={className}
+    >
       {isLoading ? (
         <svg
           className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"

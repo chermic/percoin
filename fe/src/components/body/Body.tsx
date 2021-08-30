@@ -5,11 +5,9 @@ import { MiddleBlock } from './components/MiddleBlock';
 
 export const Body = (): JSX.Element => {
   return (
-    <Router history={history}>
-      <div>
-        <MiddleBlock />
-        <BottomBlock />
-      </div>
-    </Router>
+    <div>
+      <MiddleBlock />
+      <BottomBlock />
+    </div>
   );
 };

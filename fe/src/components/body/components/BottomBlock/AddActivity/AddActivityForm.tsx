@@ -1,5 +1,5 @@
-import { useQueryClient } from 'react-query';
-import { createActivity, useGetActions } from '../../../requests';
+import { useMutation, useQueryClient } from 'react-query';
+import { createActivity, QUERY_KEY, useGetActions } from '../../../requests';
 import { Action } from '../../types';
 import { Dropdown } from '../../../../Dropdown/Dropdown';
 import { useState } from 'react';
@@ -18,6 +18,24 @@ const getUniqueCategories = (actions: Action[] = []) => {
 
 export const AddActivityForm = (): JSX.Element => {
   const queryClient = useQueryClient();
+  const mutation = useMutation(
+    () => {
+      return createActivity({
+        action: {
+          action: selectedAction?.value ?? '',
+          category: selectedCategory?.value ?? '',
+          score: score ?? 0,
+        },
+        date: Date.now(),
+        user: 'test',
+      });
+    },
+    {
+      onSuccess: async () => {
+        queryClient.invalidateQueries(QUERY_KEY.activities);
+      },
+    }
+  );
 
   const { data, isLoading, error } = useGetActions();
   console.log('🚀 ~ file: AddActivityForm.tsx ~ line 21 ~ data', data);
@@ -30,7 +48,6 @@ export const AddActivityForm = (): JSX.Element => {
   const [selectedAction, setSelectedAction] = useState<DropdownItem | null>(
     null
   );
-  const [isButtonLoading, setIsButtonLoading] = useState(false);
 
   const categoryActions: DropdownItem[] = (data?.actions ?? [])
     .filter((action) => action.category === selectedCategory?.value)
@@ -41,19 +58,6 @@ export const AddActivityForm = (): JSX.Element => {
       action.category === selectedCategory?.value &&
       action.action === selectedAction?.value
   )?.score;
-
-  const handleAddActivity = async () => {
-    setIsButtonLoading(true);
-    await createActivity({
-      action: {
-        action: selectedAction?.value ?? '',
-        category: selectedCategory?.value ?? '',
-        score: score ?? 0,
-      },
-      date: Date.now(),
-      user: 'test',
-    });
-  };
 
   if (error) {
     return <div>Error occured during fetching actions</div>;
@@ -80,9 +84,13 @@ export const AddActivityForm = (): JSX.Element => {
       />
       <span>{score}</span>
       <Button
-        onClick={handleAddActivity}
-        isLoading={isButtonLoading}
-        isDisabled={selectedAction === null || selectedCategory === null}
+        onClick={() => mutation.mutate()}
+        isLoading={mutation.isLoading}
+        isDisabled={
+          selectedAction === null ||
+          selectedCategory === null ||
+          mutation.isLoading
+        }
       >
         Add activity
       </Button>
