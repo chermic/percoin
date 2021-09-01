@@ -1,3 +1,5 @@
+import cn from 'classnames';
+
 type Props = {
   children: React.ReactChild;
   onClick(): void;
@@ -17,7 +19,9 @@ export const Button = ({
     <button
       disabled={isDisabled}
       onClick={() => onClick()}
-      className={className}
+      className={cn(className, {
+        'bg-gray-300 hover:bg-gray-300 cursor-not-allowed': isDisabled,
+      })}
     >
       {isLoading ? (
         <svg

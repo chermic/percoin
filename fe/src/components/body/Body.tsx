@@ -5,7 +5,7 @@ import { MiddleBlock } from './components/MiddleBlock';
 
 export const Body = (): JSX.Element => {
   return (
-    <div>
+    <div className="w-1400px h-screen mx-auto">
       <MiddleBlock />
       <BottomBlock />
     </div>

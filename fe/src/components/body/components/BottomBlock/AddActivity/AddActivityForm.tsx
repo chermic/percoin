@@ -5,6 +5,10 @@ import { Dropdown } from '../../../../Dropdown/Dropdown';
 import { useState } from 'react';
 import { DropdownItem } from '../../../../Dropdown';
 import { Button } from '../../../../Button';
+import { addDays } from 'date-fns';
+import ReactDatePicker from 'react-datepicker';
+
+import 'react-datepicker/dist/react-datepicker.css';
 
 const getUniqueCategories = (actions: Action[] = []) => {
   const categories = new Set<string>();
@@ -26,7 +30,7 @@ export const AddActivityForm = (): JSX.Element => {
           category: selectedCategory?.value ?? '',
           score: score ?? 0,
         },
-        date: Date.now(),
+        date: date.getTime(),
         user: 'test',
       });
     },
@@ -48,6 +52,7 @@ export const AddActivityForm = (): JSX.Element => {
   const [selectedAction, setSelectedAction] = useState<DropdownItem | null>(
     null
   );
+  const [date, setDate] = useState(new Date());
 
   const categoryActions: DropdownItem[] = (data?.actions ?? [])
     .filter((action) => action.category === selectedCategory?.value)
@@ -83,6 +88,12 @@ export const AddActivityForm = (): JSX.Element => {
         disabled={selectedCategory === null}
       />
       <span>{score}</span>
+      <ReactDatePicker
+        selected={date}
+        onChange={(date) => setDate(date as Date)}
+        maxDate={addDays(new Date(), 1)}
+        className="border-gray-200 border-2 rounded h-7 shadow-inner"
+      />
       <Button
         onClick={() => mutation.mutate()}
         isLoading={mutation.isLoading}
@@ -91,6 +102,8 @@ export const AddActivityForm = (): JSX.Element => {
           selectedCategory === null ||
           mutation.isLoading
         }
+        // className="rounded border border-gray-400 px-5 py-1 shadow"
+        className="inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500"
       >
         Add activity
       </Button>

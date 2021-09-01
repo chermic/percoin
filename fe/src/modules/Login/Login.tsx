@@ -14,7 +14,7 @@ export const Login = () => {
 
   const [loginValue, setLoginValue] = useState('');
   const [passwordValue, setPasswordValue] = useState('');
-  const [isErrored, setIsErrored] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleChangeLogin = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -33,9 +33,9 @@ export const Login = () => {
   const handleLogin = () => {
     if (loginValue === cre.login && passwordValue === cre.pass) {
       dispatch(login({ name: loginValue }));
-      setIsErrored(false);
+      setError(null);
     } else {
-      setIsErrored(true);
+      setError('Username and password combination not found');
       setPasswordValue('');
     }
   };
@@ -54,22 +54,20 @@ export const Login = () => {
           value={loginValue}
           label="Username"
         />
-        <div className="mb-6">
+        <div className="mb-2">
           <Input
             onChange={handleChangePassword}
             value={passwordValue}
             label="Password"
+            type="password"
           />
         </div>
-        {isErrored && (
-          <p className="text-red-500 text-xs italic">
-            Please choose a password.
-          </p>
-        )}
+        {error && <p className="text-red-500 text-xs italic mb-4">{error}</p>}
         <div className="flex items-center justify-around">
           <Button
             onClick={handleLogin}
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            isDisabled={loginValue.length === 0 || passwordValue.length === 0}
           >
             Login
           </Button>

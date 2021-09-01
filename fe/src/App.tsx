@@ -5,22 +5,26 @@ import { Footer } from './components/footer';
 import { ReactQueryDevtools } from 'react-query/devtools';
 
 import { QueryClientProvider, QueryClient } from 'react-query';
-import { Provider, useSelector } from 'react-redux';
+import { Provider, useDispatch, useSelector } from 'react-redux';
 import { RootState, store } from './store';
 import { LOCAL_STORAGE_KEYS } from './constants';
 import { Login } from './modules/Login';
 import { Redirect, Route, Router } from 'react-router-dom';
 import { history, ROUTES } from './router';
+import { login } from './modules/Login/redux/thunks';
 
 const AuthRouter = (): JSX.Element => {
   return (
-    <Route path={ROUTES.HOME}>
-      <div className="App">
-        <Header />
-        <Body />
-        <Footer />
-      </div>
-    </Route>
+    <>
+      <Route path={ROUTES.HOME}>
+        <div className="h-screen flex flex-col justify-between">
+          <Header />
+          <Body />
+          <Footer />
+        </div>
+      </Route>
+      <Redirect to={ROUTES.HOME} />
+    </>
   );
 };
 
@@ -54,18 +58,21 @@ const Providers = ({
   );
 };
 
-function App() {
-  const user = useSelector<RootState>((state) => state.user);
+const Routes = (): JSX.Element | null => {
+  const dispatch = useDispatch();
+  const user = useSelector<RootState>((state) => state.user.user);
   const localStorageUserLogin =
-    JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.login) ?? 'null') ??
-    null;
+    localStorage.getItem(LOCAL_STORAGE_KEYS.login) ?? null;
   if (typeof localStorageUserLogin === 'string' && !user) {
-    ;
+    dispatch(login({ name: localStorageUserLogin }));
   }
+  return localStorageUserLogin ? <AuthRouter /> : <NonAuthRouter />;
+};
 
+function App() {
   return (
     <Providers>
-      {localStorageUserLogin ? <AuthRouter /> : <NonAuthRouter />}
+      <Routes />
     </Providers>
   );
 }

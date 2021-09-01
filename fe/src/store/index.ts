@@ -42,7 +42,7 @@ export const store = configureStore({
   reducer: {
     user: usersReducer,
   },
-  middleware: [thunkMiddleware],
+  devTools: true,
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
