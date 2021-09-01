@@ -3,7 +3,7 @@ import { SideBar } from './SideBar';
 
 export const MiddleBlock = (): JSX.Element => {
   return (
-    <div>
+    <div className="mt-10 flex justify-between">
       <Chart />
       <SideBar />
     </div>

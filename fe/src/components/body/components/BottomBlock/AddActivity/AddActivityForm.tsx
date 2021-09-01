@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from 'react-query';
 import { createActivity, QUERY_KEY, useGetActions } from '../../../requests';
 import { Action } from '../../types';
 import { Dropdown } from '../../../../Dropdown/Dropdown';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { DropdownItem } from '../../../../Dropdown';
 import { Button } from '../../../../Button';
 import { addDays } from 'date-fns';
@@ -19,6 +19,10 @@ const getUniqueCategories = (actions: Action[] = []) => {
 
   return { categories: [...categories].filter(Boolean) };
 };
+
+const Column = ({ children }: { children: React.ReactChild }): JSX.Element => (
+  <div className="w-1/5 flex justify-center">{children}</div>
+);
 
 export const AddActivityForm = (): JSX.Element => {
   const queryClient = useQueryClient();
@@ -58,11 +62,12 @@ export const AddActivityForm = (): JSX.Element => {
     .filter((action) => action.category === selectedCategory?.value)
     .map((action) => ({ value: action.action }));
 
-  const score = data?.actions?.find(
-    (action) =>
-      action.category === selectedCategory?.value &&
-      action.action === selectedAction?.value
-  )?.score;
+  const score =
+    data?.actions?.find(
+      (action) =>
+        action.category === selectedCategory?.value &&
+        action.action === selectedAction?.value
+    )?.score ?? 0;
 
   if (error) {
     return <div>Error occured during fetching actions</div>;
@@ -73,40 +78,50 @@ export const AddActivityForm = (): JSX.Element => {
   }
 
   return (
-    <div>
-      <Dropdown
-        items={categories.map((category) => ({ value: category }))}
-        defaultText="Select category"
-        onChange={setSelectedCategory}
-        selectedItem={selectedCategory}
-      />
-      <Dropdown
-        items={categoryActions}
-        defaultText="Select action"
-        onChange={setSelectedAction}
-        selectedItem={selectedAction}
-        disabled={selectedCategory === null}
-      />
-      <span>{score}</span>
-      <ReactDatePicker
-        selected={date}
-        onChange={(date) => setDate(date as Date)}
-        maxDate={addDays(new Date(), 1)}
-        className="border-gray-200 border-2 rounded h-7 shadow-inner"
-      />
-      <Button
-        onClick={() => mutation.mutate()}
-        isLoading={mutation.isLoading}
-        isDisabled={
-          selectedAction === null ||
-          selectedCategory === null ||
-          mutation.isLoading
-        }
-        // className="rounded border border-gray-400 px-5 py-1 shadow"
-        className="inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500"
-      >
-        Add activity
-      </Button>
+    <div className="flex flex-between items-center">
+      <Column>
+        <Dropdown
+          items={categories.map((category) => ({ value: category }))}
+          defaultText="Select category"
+          onChange={setSelectedCategory}
+          selectedItem={selectedCategory}
+        />
+      </Column>
+      <Column>
+        <Dropdown
+          items={categoryActions}
+          defaultText="Select action"
+          onChange={setSelectedAction}
+          selectedItem={selectedAction}
+          disabled={selectedCategory === null}
+        />
+      </Column>
+      <Column>
+        <span className="text-center">{score}</span>
+      </Column>
+      <Column>
+        <ReactDatePicker
+          selected={date}
+          onChange={(date) => setDate(date as Date)}
+          maxDate={addDays(new Date(), 1)}
+          className="border-gray-200 border-2 rounded h-7 shadow-inner"
+        />
+      </Column>
+      <Column>
+        <Button
+          onClick={() => mutation.mutate()}
+          isLoading={mutation.isLoading}
+          isDisabled={
+            selectedAction === null ||
+            selectedCategory === null ||
+            mutation.isLoading
+          }
+          // className="rounded border border-gray-400 px-5 py-1 shadow"
+          className="inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500"
+        >
+          Add activity
+        </Button>
+      </Column>
     </div>
   );
 };

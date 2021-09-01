@@ -3,7 +3,7 @@ import { AddActivityForm } from './AddActivity/AddActivityForm';
 
 export const BottomBlock = () => {
   return (
-    <div>
+    <div className="mt-10">
       <AddActivityForm />
       <ActionsList />
     </div>

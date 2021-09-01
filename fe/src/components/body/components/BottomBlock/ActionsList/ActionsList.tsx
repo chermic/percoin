@@ -13,7 +13,7 @@ export const ActionsList = () => {
   }
 
   return (
-    <div>
+    <div className="mt-5">
       {data?.activities?.map((activity) => (
         <Action activity={activity} key={activity.date} />
       ))}
