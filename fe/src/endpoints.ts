@@ -7,4 +7,6 @@ export const endpoints = {
     'https://eqbufdd8x2.execute-api.us-east-1.amazonaws.com/dev/get-actions',
   ADD_ACTIONS:
     'https://eqbufdd8x2.execute-api.us-east-1.amazonaws.com/dev/add-actions',
+  GET_FAVORITE_ACTIVITY:
+    'https://eqbufdd8x2.execute-api.us-east-1.amazonaws.com/dev/get-favorite-activity',
 };

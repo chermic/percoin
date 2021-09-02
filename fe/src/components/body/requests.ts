@@ -1,4 +1,4 @@
-import { useQuery } from 'react-query';
+import { useQuery, UseQueryResult } from 'react-query';
 import superagent from 'superagent';
 import { endpoints } from '../../endpoints';
 import { Action, Activity } from './components/types';
@@ -13,15 +13,7 @@ type UseFetchResult<Data = Record<string, unknown>> = {
 export const QUERY_KEY = {
   actions: 'actions',
   activities: 'activities',
-};
-
-const getActivities = async (): Promise<{ activities: Activity[] }> => {
-  try {
-    const activities = await superagent.get(endpoints.GET_ACTIVITIES ?? '');
-    return activities.body;
-  } catch (e) {
-    throw e;
-  }
+  favoriteActivity: 'favoriteActivity',
 };
 
 const getActions = async (): Promise<{ actions: Action[] }> => {
@@ -50,8 +42,41 @@ export const createActivity = async (activity: Activity) => {
   return response;
 };
 
+const getFavoriteActivity = async (): Promise<{
+  activity: Activity;
+} | null> => {
+  try {
+    const response = await superagent.get(
+      endpoints.GET_FAVORITE_ACTIVITY ?? ''
+    );
+
+    return response.body;
+  } catch (e) {
+    throw e;
+  }
+};
+
+export const useGetFavoriteActivity = () => {
+  const queryResult = useQuery({
+    queryFn: getFavoriteActivity,
+    queryKey: QUERY_KEY.favoriteActivity,
+    refetchOnWindowFocus: false,
+  });
+
+  return queryResult;
+};
+
 type UseGetActivitiesResponse = {
   activities: Activity[];
+};
+
+const getActivities = async (): Promise<{ activities: Activity[] }> => {
+  try {
+    const activities = await superagent.get(endpoints.GET_ACTIVITIES ?? '');
+    return activities.body;
+  } catch (e) {
+    throw e;
+  }
 };
 
 export const useGetActivities =
