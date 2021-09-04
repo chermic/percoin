@@ -4,7 +4,7 @@ import { Converter } from 'aws-sdk/clients/dynamodb';
 export const getActionsService = async () => {
   try {
     const dynamoDb = new DynamoDB();
-    const TableName = process.env.ACTIONS_TABLE;
+    const TableName = process.env.ACTIONS_TABLE ?? '';
     console.log(
       '🚀 ~ file: service.ts ~ line 8 ~ getActionsService ~ TableName',
       TableName
@@ -12,7 +12,7 @@ export const getActionsService = async () => {
 
     const scanResponse = await dynamoDb.scan({ TableName });
 
-    const formattedActions = scanResponse.Items.map((item) =>
+    const formattedActions = scanResponse.Items?.map((item) =>
       Converter.unmarshall(item)
     );
     console.log(

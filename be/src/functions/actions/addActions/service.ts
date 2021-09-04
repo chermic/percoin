@@ -9,7 +9,7 @@ export const addActionsService = async (action: Action) => {
   );
   console.log('start addActionService');
   try {
-    const TableName = process.env.ACTIONS_TABLE;
+    const TableName = process.env.ACTIONS_TABLE ?? '';
     const dynamoDb = new DynamoDB();
     const Item = Converter.marshall(action);
     console.log(

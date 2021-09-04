@@ -1,16 +1,18 @@
 import { formatALBResult } from '@common/lib/alUtils';
 import { middyfy } from '@common/lib/middy';
 import { ALHandler } from '@common/types/AWSHandler';
-import { getFavoriteActivityService } from './service';
+import { getActivitiStatisticService } from './service';
 
-const getFavoriteActivityApi: ALHandler = async (event) => {
+const getActivitiesStatisticApi: ALHandler = async (event) => {
   try {
-    const favoriteActivity = await getFavoriteActivityService();
+    const statistic = await getActivitiStatisticService();
 
     return formatALBResult({
       statusCode: 200,
       body: {
-        activity: favoriteActivity,
+        favoriteActivity: statistic.favoriteActivity,
+        idlenessDay: statistic.idlenessDay,
+        bestCourse: statistic.bestCourse,
       },
     });
   } catch (e) {
@@ -24,4 +26,4 @@ const getFavoriteActivityApi: ALHandler = async (event) => {
   }
 };
 
-export const getFavoriteActivity = middyfy(getFavoriteActivityApi);
+export const getActivityStatistic = middyfy(getActivitiesStatisticApi);

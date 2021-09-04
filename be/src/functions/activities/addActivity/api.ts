@@ -7,6 +7,14 @@ import { addActivityService } from './service';
 const addActivityApi: ALHandler<Activity> = async (event) => {
   try {
     const { action, date, user } = event.body;
+    if (!(action && date && user)) {
+      return formatALBResult({
+        statusCode: 400,
+        body: {
+          message: 'Invalid incoming parameters',
+        },
+      });
+    }
     console.log(
       '🚀 ~ file: api.ts ~ line 13 ~ action, date, user',
       action,
