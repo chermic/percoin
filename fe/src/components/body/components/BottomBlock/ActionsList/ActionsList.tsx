@@ -14,9 +14,11 @@ export const ActionsList = () => {
 
   return (
     <div className="mt-5">
-      {data?.activities?.map((activity) => (
-        <Action activity={activity} key={activity.date} />
-      ))}
+      {data?.activities
+        ?.filter((activity) => !activity.action.isService)
+        .map((activity) => (
+          <Action activity={activity} key={activity.date} />
+        ))}
     </div>
   );
 };

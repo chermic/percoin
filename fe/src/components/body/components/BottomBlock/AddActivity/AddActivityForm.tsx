@@ -33,6 +33,7 @@ export const AddActivityForm = (): JSX.Element => {
           action: selectedAction?.value ?? '',
           category: selectedCategory?.value ?? '',
           score: score ?? 0,
+          isService: false,
         },
         date: date.getTime(),
         user: 'test',
@@ -41,6 +42,7 @@ export const AddActivityForm = (): JSX.Element => {
     {
       onSuccess: async () => {
         queryClient.invalidateQueries(QUERY_KEY.activities);
+        queryClient.invalidateQueries(QUERY_KEY.activityStatistic);
       },
     }
   );

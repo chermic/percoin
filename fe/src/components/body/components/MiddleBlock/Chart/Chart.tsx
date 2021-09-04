@@ -35,17 +35,11 @@ export const Chart = () => {
 
   const graphData = data?.activities
     .sort((a, b) => a.date - b.date)
-    .map((activity, i, activities) => {
-      const scoreSumm = activities
-        .slice(0, i)
-        .reduce(
-          (acc, activity) => (acc += activity.action.score),
-          DEFAULT_SCORE_SUM
-        );
+    .map((activity) => {
       return {
         name: new Date(activity.date).toLocaleDateString().slice(0, -5),
         timestamp: activity.date,
-        uv: scoreSumm,
+        uv: activity.totalScore,
       };
     });
 

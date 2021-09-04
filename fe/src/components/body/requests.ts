@@ -13,7 +13,7 @@ type UseFetchResult<Data = Record<string, unknown>> = {
 export const QUERY_KEY = {
   actions: 'actions',
   activities: 'activities',
-  favoriteActivity: 'favoriteActivity',
+  activityStatistic: 'activityStatistic',
 };
 
 const getActions = async (): Promise<{ actions: Action[] }> => {
@@ -34,7 +34,9 @@ export const createActions = async (actions: Action[]) => {
   return result;
 };
 
-export const createActivity = async (activity: Activity) => {
+export const createActivity = async (
+  activity: Omit<Activity, 'totalScore'>
+) => {
   const response = await superagent
     .post(endpoints.ADD_ACTIVITY ?? '')
     .send(activity);
@@ -42,12 +44,14 @@ export const createActivity = async (activity: Activity) => {
   return response;
 };
 
-const getFavoriteActivity = async (): Promise<{
-  activity: Activity;
+const getActivityStatistic = async (): Promise<{
+  favoriteActivity?: Activity | null;
+  idlenessDay?: { daysCount: number; activity: Activity } | null;
+  bestCourse?: Activity | null;
 } | null> => {
   try {
     const response = await superagent.get(
-      endpoints.GET_FAVORITE_ACTIVITY ?? ''
+      endpoints.GET_ACTIVITY_STATISTIC ?? ''
     );
 
     return response.body;
@@ -56,10 +60,10 @@ const getFavoriteActivity = async (): Promise<{
   }
 };
 
-export const useGetFavoriteActivity = () => {
+export const useGetActivityStatistic = () => {
   const queryResult = useQuery({
-    queryFn: getFavoriteActivity,
-    queryKey: QUERY_KEY.favoriteActivity,
+    queryFn: getActivityStatistic,
+    queryKey: QUERY_KEY.activityStatistic,
     refetchOnWindowFocus: false,
   });
 
