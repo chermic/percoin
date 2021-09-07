@@ -21,24 +21,28 @@ const getObjMaxValue = (map: Record<string, number>): string => {
 };
 
 const getFavoriteAction = (items: Activity[]) => {
-  if (items.length === 0) {
+  const notServiceItems = items.filter(
+    (activity) => !activity.action.isService
+  );
+  if (notServiceItems.length === 0) {
     return null;
   }
 
   const map: Record<string, number> = {};
-  items.forEach((item) => {
+  notServiceItems.forEach((item) => {
     const key = `${item.action.category}_${item.action.action}`;
     if (map[key] === undefined) {
-      map[key] = 0;
+      map[key] = 1;
     } else {
       map[key] += 1;
     }
   });
+  console.log('🚀 ~ file: service.ts ~ line 32 ~ getFavoriteAction ~ map', map);
 
   const maxValueKey = getObjMaxValue(map);
 
   const [category, action] = maxValueKey.split('_');
-  const favoriteAction = items.find(
+  const favoriteAction = notServiceItems.find(
     (item) => item.action.category === category && item.action.action === action
   );
   console.log(

@@ -20,6 +20,7 @@ const serverlessConfiguration: AWS = {
   // Add the serverless-webpack plugin
   plugins: ['serverless-webpack', 'serverless-offline'],
   provider: {
+    stage: 'dev',
     name: 'aws',
     runtime: 'nodejs12.x',
     lambdaHashingVersion: '20201221',
@@ -33,10 +34,10 @@ const serverlessConfiguration: AWS = {
     },
     iam: {
       role: {
-        name: 'ActionsTableReadWriteRole',
+        name: 'ActionsTableReadWriteRole${self:provider.stage}',
         statements: [
           {
-            Sid: 'ActionsTableReadWriteRole',
+            Sid: 'ActionsTableReadWriteRole${self:provider.stage}',
             Effect: 'Allow',
             Action: [
               'dynamodb:BatchGet*',
@@ -69,7 +70,7 @@ const serverlessConfiguration: AWS = {
       ActionsTable: {
         Type: 'AWS::DynamoDB::Table',
         Properties: {
-          TableName: '${self:service}_actions',
+          TableName: '${self:service}_actions_${self:provider.stage}',
           AttributeDefinitions: [
             { AttributeName: 'category', AttributeType: 'S' },
             { AttributeName: 'action', AttributeType: 'S' },
@@ -87,7 +88,7 @@ const serverlessConfiguration: AWS = {
       ActionsLogTable: {
         Type: 'AWS::DynamoDB::Table',
         Properties: {
-          TableName: '${self:service}_actions-log',
+          TableName: '${self:service}_actions-log_${self:provider.stage}',
           AttributeDefinitions: [
             { AttributeName: 'date', AttributeType: 'N' },
             { AttributeName: 'user', AttributeType: 'S' },

@@ -22,6 +22,12 @@ const createFirstServiceItem = (date: number): Activity => {
   return firstServiceItem;
 };
 
+const isStartActivity = (activity: Activity): boolean =>
+  activity.user === 'service' &&
+  activity.action.isService &&
+  activity.action.action === 'start' &&
+  activity.action.category === 'service';
+
 export const addActivityService = async (
   newActivity: Omit<Activity, 'totalScore'>
 ) => {
@@ -80,6 +86,34 @@ export const addActivityService = async (
         });
         const result = await dynamoDb.putItem({ TableName, Item });
       } else {
+        const existingStartServiceItem = allItems.find(isStartActivity);
+        if (existingStartServiceItem) {
+          console.log(
+            '🚀 ~ file: service.ts ~ line 91 ~ existingStartServiceItem',
+            existingStartServiceItem
+          );
+          const deletingItem = Converter.marshall({
+            user: existingStartServiceItem.user,
+            date: existingStartServiceItem.date,
+          });
+          await dynamoDb.dynamoDb
+            .deleteItem({
+              TableName,
+              Key: deletingItem,
+            })
+            .promise();
+        }
+        console.log(
+          '🚀 ~ file: service.ts ~ line 84 ~ firstServiceItem',
+          firstServiceItem
+        );
+        const notServiceItems = sortedItems.filter(
+          (item) => !isStartActivity(item)
+        );
+        console.log(
+          '🚀 ~ file: service.ts ~ line 96 ~ notServiceItems',
+          notServiceItems
+        );
         const updatedItems: Activity[] = [
           firstServiceItem,
           {
@@ -87,8 +121,9 @@ export const addActivityService = async (
             totalScore: firstServiceItem.totalScore + newActivity.action.score,
           },
         ];
-        for (let i = 0; i < sortedItems.length; i++) {
-          const activity = sortedItems[i];
+        for (let i = 0; i < notServiceItems.length; i++) {
+          const activity = notServiceItems[i];
+
           updatedItems.push({
             ...activity,
             totalScore:

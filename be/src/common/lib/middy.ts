@@ -19,7 +19,7 @@ export const middyfy = (
   const result = middy(handler).use(middlewares);
 
   if (options?.cors) {
-    result.use(cors({ credentials: true, origin: '*' }));
+    result.use(cors({ credentials: true, origin: '*', }));
   }
 
   return result;

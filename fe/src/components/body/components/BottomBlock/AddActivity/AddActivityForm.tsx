@@ -43,6 +43,8 @@ export const AddActivityForm = (): JSX.Element => {
       onSuccess: async () => {
         queryClient.invalidateQueries(QUERY_KEY.activities);
         queryClient.invalidateQueries(QUERY_KEY.activityStatistic);
+        setDate(new Date());
+        setSelectedAction(null);
       },
     }
   );

@@ -8,7 +8,7 @@ export class FunctionDefinition {
   }
 
   public addCors() {
-    const httpEvent = this.functionDefinition.events.find((event) =>
+    const httpEvent = this.functionDefinition.events?.find((event) =>
       Object.keys(event).includes('http')
     );
 
@@ -16,7 +16,9 @@ export class FunctionDefinition {
       console.error('Can not find "http" event in events list');
     }
 
-    httpEvent['http'].cors = true;
+    if (httpEvent) {
+      httpEvent['http'].cors = true;
+    }
 
     return this;
   }

@@ -6,6 +6,7 @@
   "scripts": {
     "offline": "sls offline",
     "deploy": "sls deploy",
+    "deploy:prod": "sls deploy -s prod",
     "build": "sls package",
     "wp": "webpack",
     "test": "echo \"Error: no test specified\" && exit 1"

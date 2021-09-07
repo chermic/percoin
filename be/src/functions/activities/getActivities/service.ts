@@ -65,7 +65,7 @@ export const getActivitiesService = async (
       '🚀 ~ file: service.ts ~ line 11 ~ getActivitiesService ~ activities',
       activities
     );
-    return filteredActivities;
+    return filteredActivities.sort((a, b) => a.date - b.date);
   } catch (e) {
     throw e;
   }
