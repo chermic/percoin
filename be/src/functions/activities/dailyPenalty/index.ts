@@ -4,5 +4,5 @@ import { IFunctionDefinition } from '@common/types/common';
 
 export const dailyPenalty: IFunctionDefinition = new FunctionDefinition({
   handler: `${handlerPath(__dirname)}/api.handler`,
-  events: [{ schedule: { rate: '* * * * *' } }],
+  events: [{ schedule: { rate: 'cron(0 0 * * ? *)', enabled: true } }],
 }).getResult();
